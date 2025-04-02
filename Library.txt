@@ -178,14 +178,25 @@ function Library.Main(Name)
         local CheckFrame = CreateModule.Instance("Frame", {
             Parent = Checkbox,
             Name = "CheckFrame",
-            BackgroundColor3 = Library.Theme.Element,
+            BackgroundTransparency = 1,
             BorderSizePixel = 0,
             Position = UDim2.new(0, 5, 0.5, -10),
             Size = UDim2.new(0, 20, 0, 20),
             ZIndex = 3
         })
 
-        CreateModule.Instance("UIStroke", {
+        local CheckFrameInner = CreateModule.Instance("Frame", {
+            Parent = CheckFrame,
+            Name = "CheckFrameInner",
+            BackgroundColor3 = Library.Theme.Accent,
+            BackgroundTransparency = 1,
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 0, 0, 0),
+            Size = UDim2.new(1, 0, 1, 0),
+            ZIndex = 3
+        })
+
+        local CheckStroke = CreateModule.Instance("UIStroke", {
             Parent = CheckFrame,
             Name = "Stroke",
             Thickness = 1,
@@ -202,6 +213,7 @@ function Library.Main(Name)
             Size = UDim2.new(1, -4, 1, -4),
             Image = "rbxassetid://10709790644",
             ImageColor3 = Color3.fromRGB(255, 255, 255),
+            ImageTransparency = 1,
             ZIndex = 3
         })
 
@@ -210,9 +222,13 @@ function Library.Main(Name)
         IsActive.Changed:Connect(function()
             CheckMark.Visible = IsActive.Value
             if IsActive.Value then
-                TweenService:Create(CheckFrame, TweenInfo.new(0.3), {BackgroundColor3 = Library.Theme.Accent}):Play()
+                CheckStroke.Color = Color3.fromRGB(255, 255, 255)
+                TweenService:Create(CheckFrameInner, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
+                TweenService:Create(CheckMark, TweenInfo.new(0.2), {ImageTransparency = 0}):Play()
             else
-                TweenService:Create(CheckFrame, TweenInfo.new(0.3), {BackgroundColor3 = Library.Theme.Element}):Play()
+                CheckStroke.Color = Library.Theme.ElementBorder
+                TweenService:Create(CheckFrameInner, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play()
+                TweenService:Create(CheckMark, TweenInfo.new(0.2), {ImageTransparency = 1}):Play()
             end
             spawn(function() config.Callback(IsActive.Value) end)
         end)
