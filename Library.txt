@@ -9,7 +9,7 @@ local Library = {
         AcrylicBorder = Color3.fromRGB(60, 60, 60),
         TitleBarLine = Color3.fromRGB(65, 65, 65),
         Element = Color3.fromRGB(70, 70, 70),
-        ElementBorder = Color3.fromRGB(25, 25, 25),
+        ElementBorder = Color3.fromRGB(100, 100, 100),
         InElementBorder = Color3.fromRGB(55, 55, 55),
         ElementTransparency = 0.82,
         FontColor = Color3.fromRGB(255, 255, 255),
@@ -158,8 +158,8 @@ function Library.Main(Name)
             Name = "Label",
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
-            Position = UDim2.new(0, 30, 0, 0),
-            Size = UDim2.new(1, -30, 1, 0),
+            Position = UDim2.new(0, 5, 0, 0),
+            Size = UDim2.new(0.7, 0, 1, 0),
             Font = Enum.Font[Library.Theme.Font],
             Text = config.Name,
             TextSize = 16,
@@ -168,19 +168,12 @@ function Library.Main(Name)
             ZIndex = 3
         })
 
-        local IsActive = CreateModule.Instance("BoolValue", {
-            Parent = Checkbox,
-            Name = "IsActive"
-        })
-
-        IsActive.Value = config.Default or false
-
         local CheckFrame = CreateModule.Instance("Frame", {
             Parent = Checkbox,
             Name = "CheckFrame",
             BackgroundTransparency = 1,
             BorderSizePixel = 0,
-            Position = UDim2.new(0, 5, 0.5, -10),
+            Position = UDim2.new(1, -25, 0.5, -10),
             Size = UDim2.new(0, 20, 0, 20),
             ZIndex = 3
         })
@@ -222,11 +215,11 @@ function Library.Main(Name)
         IsActive.Changed:Connect(function()
             CheckMark.Visible = IsActive.Value
             if IsActive.Value then
-                CheckStroke.Color = Color3.fromRGB(255, 255, 255)
+                CheckStroke.Transparency = 1
                 TweenService:Create(CheckFrameInner, TweenInfo.new(0.2), {BackgroundTransparency = 0}):Play()
                 TweenService:Create(CheckMark, TweenInfo.new(0.2), {ImageTransparency = 0}):Play()
             else
-                CheckStroke.Color = Library.Theme.ElementBorder
+                CheckStroke.Transparency = 0
                 TweenService:Create(CheckFrameInner, TweenInfo.new(0.2), {BackgroundTransparency = 1}):Play()
                 TweenService:Create(CheckMark, TweenInfo.new(0.2), {ImageTransparency = 1}):Play()
             end
