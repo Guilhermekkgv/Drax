@@ -3,7 +3,7 @@ local InputService = game:GetService("UserInputService")
 
 local Library = {
     Theme = {
-        Font = "RobotoMono",
+        Font = "GothamBlack",
         Accent = Color3.fromRGB(72, 138, 182),
         AcrylicMain = Color3.fromRGB(30, 30, 30),
         AcrylicBorder = Color3.fromRGB(60, 60, 60),
@@ -12,7 +12,7 @@ local Library = {
         ElementBorder = Color3.fromRGB(25, 25, 25),
         InElementBorder = Color3.fromRGB(55, 55, 55),
         ElementTransparency = 0.82,
-        FontColor = Color3.fromRGB(200, 200, 200),
+        FontColor = Color3.fromRGB(255, 255, 255),
         HideKey = "LeftAlt"
     }
 }
@@ -185,12 +185,6 @@ function Library.Main(Name)
             ZIndex = 3
         })
 
-        CreateModule.Instance("UICorner", {
-            Parent = CheckFrame,
-            Name = "Corner",
-            CornerRadius = UDim.new(0, 4)
-        })
-
         CreateModule.Instance("UIStroke", {
             Parent = CheckFrame,
             Name = "Stroke",
@@ -207,7 +201,7 @@ function Library.Main(Name)
             Position = UDim2.new(0, 2, 0, 2),
             Size = UDim2.new(1, -4, 1, -4),
             Image = "rbxassetid://10709790644",
-            ImageColor3 = Library.Theme.Accent,
+            ImageColor3 = Color3.fromRGB(255, 255, 255),
             ZIndex = 3
         })
 
@@ -215,6 +209,11 @@ function Library.Main(Name)
 
         IsActive.Changed:Connect(function()
             CheckMark.Visible = IsActive.Value
+            if IsActive.Value then
+                TweenService:Create(CheckFrame, TweenInfo.new(0.3), {BackgroundColor3 = Library.Theme.Accent}):Play()
+            else
+                TweenService:Create(CheckFrame, TweenInfo.new(0.3), {BackgroundColor3 = Library.Theme.Element}):Play()
+            end
             spawn(function() config.Callback(IsActive.Value) end)
         end)
 
@@ -261,6 +260,60 @@ function Library.Main(Name)
 
         AddToReg(Label)
         return Label
+    end
+
+    function InMain.Button(config)
+        local Button = CreateModule.Instance("TextButton", {
+            Parent = Container,
+            Name = config.Name,
+            BackgroundColor3 = Library.Theme.Element,
+            BackgroundTransparency = Library.Theme.ElementTransparency,
+            BorderSizePixel = 0,
+            Position = UDim2.new(0, 0, 0, 0),
+            Size = UDim2.new(0.95, 0, 0, 30),
+            Font = Enum.Font[Library.Theme.Font],
+            Text = config.Name,
+            TextSize = 16,
+            TextColor3 = Library.Theme.FontColor,
+            TextXAlignment = Enum.TextXAlignment.Center,
+            AutoButtonColor = false,
+            ZIndex = 3
+        })
+
+        CreateModule.Instance("UICorner", {
+            Parent = Button,
+            Name = "Corner",
+            CornerRadius = UDim.new(0, 4)
+        })
+
+        CreateModule.Instance("UIStroke", {
+            Parent = Button,
+            Name = "Stroke",
+            Thickness = 1,
+            Color = Library.Theme.ElementBorder,
+            ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        })
+
+        Button.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                TweenService:Create(Button, TweenInfo.new(0.3), {BackgroundColor3 = Library.Theme.Accent, BackgroundTransparency = 0}):Play()
+            end
+        end)
+
+        Button.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                TweenService:Create(Button, TweenInfo.new(0.3), {BackgroundColor3 = Library.Theme.Element, BackgroundTransparency = Library.Theme.ElementTransparency}):Play()
+            end
+        end)
+
+        Button.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                spawn(function() config.Callback() end)
+            end
+        end)
+
+        AddToReg(Button)
+        return Button
     end
 
     return InMain
